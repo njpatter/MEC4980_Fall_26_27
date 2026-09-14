@@ -1,27 +1,39 @@
 #include <Arduino.h>
+#include <string.h>
+#include <Ticker.h>
+ 
+String printSentence = "";
+volatile bool isSentenceComplete = false;
+long prevSampleTime = 0;
+long timeBetweenSamplesMs = 100;
 
-// put function declarations here:
-int myFunction(int, int);
+void myFunction();
+
+Ticker newTimerFn(myFunction, timeBetweenSamplesMs, 0, MILLIS);
 
 void setup() {
   Serial.begin(9600);
-  delay(1000);
+  delay(2000);
   
-  int result = myFunction(2, 3);
   pinMode(0, INPUT_PULLUP);
   pinMode(1, INPUT_PULLDOWN);
   pinMode(2, INPUT_PULLDOWN);
-}
+
+  newTimerFn.start();
+} 
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  Serial.print("D0, D1, D2: ");
-  Serial.print(digitalRead(0));
-  Serial.print(digitalRead(1));
-  Serial.println(digitalRead(2));
+  long currentTime = millis();
+  newTimerFn.update();
+  if (isSentenceComplete) {
+    Serial.println(printSentence);
+    isSentenceComplete = false;
+  }
 }
 
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
-}
+void myFunction() {
+  printSentence = "D0, D1, D2, A0: ";
+  printSentence += (String(digitalRead(0)) + ", " + String(digitalRead(1)) + " , " + String(digitalRead(2)));
+  printSentence += " , " + String(analogRead(A0)); 
+  isSentenceComplete = true;
+} 
