@@ -42,11 +42,13 @@ enum menuState {
 
 enum tempState {
   C,
-  F
+  F,
+  tCount
 };
 
 hvacState opMode = Heating;
 menuState menuMode = TemperatureMenu;
+tempState tempMode = C;
 float targetTemp = 24.;
 volatile long prevChangeTime = 0;
 volatile long prevChangeTimeTwo = 0;
@@ -70,10 +72,22 @@ void IRAM_ATTR buttonToChangeMenu() {
   }
 }
 
+
+
 Adafruit_BME680 bme(&Wire); // I2C
 //Adafruit_BME680 bme(&Wire1); // example of I2C on another bus
 //Adafruit_BME680 bme(BME_CS); // hardware SPI
 //Adafruit_BME680 bme(BME_CS, BME_MOSI, BME_MISO,  BME_SCK);
+
+float getCurrentTemp() {
+  if (tempMode == tempState::C) {
+    return bme.temperature;
+  }
+  if (tempMode == tempState::F) {
+    return bme.temperature * 9. / 5. + 32.;
+  }
+  return -1100.;
+}
 
 void setup() {
   Serial.begin(9600);
@@ -106,7 +120,7 @@ void loop() {
     return;
   }
   
-  float currentTemp = bme.temperature;
+  float currentTemp = getCurrentTemp();
   Serial.print("Temperature = ");
   Serial.print(currentTemp);
   Serial.print(" *C");
@@ -120,6 +134,8 @@ void loop() {
   if (menuButtonFlag) {
     menuButtonFlag = false;
     menuMode = (menuState)(((int)menuMode + 1) % (int)menuState::mCount);
+    Serial.print("!!!!!!!!!!!!!!!!!!!!!!!!! Moving to menu: ");
+    Serial.println(menuMode);
   }
 
   if (changeButtonFlag) {
@@ -133,7 +149,7 @@ void loop() {
       opMode = (hvacState)(((int)opMode + 1) % (int)hvacState::hCount);
     }
     if (menuMode == UnitMenu) {
-
+      // Change from F to C or C to F 
     }
     changeButtonFlag = false;
     
