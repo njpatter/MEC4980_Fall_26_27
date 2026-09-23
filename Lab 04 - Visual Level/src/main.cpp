@@ -85,11 +85,16 @@ void loop() {
   Serial.print(" y: ");
   Serial.print(y);
   Serial.print(" z: ");
-  Serial.print(z);
-  Serial.print(" alpha: ");
-  Serial.print(alpha);
-  Serial.print(" beta: ");
-  Serial.println(beta);*/
+  Serial.print(z);*/
+  if (curMode == AxisMode::MODE_BOTH || curMode == AxisMode::MODE_X) {
+    Serial.print(" alpha: ");
+    Serial.println(alpha);
+  }
+  if (curMode == AxisMode::MODE_BOTH || curMode == AxisMode::MODE_Y) { 
+    Serial.print("beta: ");
+    Serial.println(beta);
+  }
+  
 }
 
 void setReports(void) {
