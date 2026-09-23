@@ -29,7 +29,24 @@ void setup(void) {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  delay(10);
+
+  if (bno08x.wasReset()) {
+    Serial.print("sensor was reset ");
+    setReports();
+  }
+
+  if (!bno08x.getSensorEvent(&sensorValue)) {
+    return;
+  }
+
+  
+  Serial.print("Accelerometer - x: ");
+  Serial.print(sensorValue.un.accelerometer.x);
+  Serial.print(" y: ");
+  Serial.print(sensorValue.un.accelerometer.y);
+  Serial.print(" z: ");
+  Serial.println(sensorValue.un.accelerometer.z);
 }
 
 void setReports(void) {
