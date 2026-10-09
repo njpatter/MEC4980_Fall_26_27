@@ -5,13 +5,11 @@ const int PIN2 = 10;
 const int PWM_FREQ = 20000;
 const int PWM_BITS = 8;
 
-void setup() {
-  ledcAttach(PIN1, PWM_FREQ, PWM_BITS);
-  ledcAttach(PIN2, PWM_FREQ, PWM_BITS);
+void setup() { 
 }
 
 void loop() {
-  ledcWrite(PIN1, 128);
-  ledcWrite(PIN2, 0);
+  analogWrite(PIN1, 255);
+  analogWrite(PIN2, 0);
 }
 
