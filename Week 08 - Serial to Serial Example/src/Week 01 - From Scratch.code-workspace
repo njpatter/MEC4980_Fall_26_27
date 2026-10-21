@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "../../Week 01 - From Scratch"
+		},
+		{
+			"name": "Week 07 - Stepper Motors Go",
+			"path": "../../Week 07 - Stepper Motors Go"
+		},
+		{
+			"name": "Week 08 - Serial to Serial Example",
+			"path": ".."
+		}
+	],
+	"settings": {}
+}
